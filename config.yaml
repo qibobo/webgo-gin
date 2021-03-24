@@ -1,0 +1,8 @@
+server:  
+  port: 8080
+db:
+  demo_db:
+    url: "root:123@tcp(localhost:3306)/demo?tls=skip-verify&autocommit=true"
+    max_open_connections: 10
+    max_idle_connections: 5
+    connection_max_lifetime: 60s
