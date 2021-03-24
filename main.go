@@ -14,6 +14,7 @@ import (
 
 	"github.com/qibobo/webgo-gin/config"
 	"github.com/qibobo/webgo-gin/controller"
+	"github.com/qibobo/webgo-gin/db"
 	"github.com/qibobo/webgo-gin/db/sqldb"
 	_ "github.com/qibobo/webgo-gin/docs"
 	"github.com/qibobo/webgo-gin/logging"
@@ -72,16 +73,20 @@ func main() {
 		fmt.Fprintf(os.Stdout, "failed to init logger : %s\n", err.Error())
 		os.Exit(1)
 	}
-	fmt.Printf("=======logger: %v\n", logger)
 	demodb, err := sqldb.NewDemoSQLDB(conf.DB.DemoDB, *logger.Named("demodb"))
 	if err != nil {
 		logger.Error("failed to connect to demodb", zap.Error(err))
 		os.Exit(1)
 	}
 
+	server := createServer(logger, demodb)
+	server.Run(fmt.Sprintf(":%d", conf.Server.Port))
+}
+
+func createServer(logger *zap.Logger, demoDB db.DemoDB) *gin.Engine {
 	r := gin.Default()
 
-	c := controller.NewDemoController(logger, demodb)
+	c := controller.NewDemoController(logger, demoDB)
 
 	v1 := r.Group("/api/v1")
 	{
@@ -92,5 +97,5 @@ func main() {
 		}
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	r.Run(fmt.Sprintf(":%d", conf.Server.Port))
+	return r
 }

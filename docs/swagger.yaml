@@ -39,7 +39,7 @@ paths:
             type: string
       summary: create demo
       tags:
-      - demo
+      - demossss
   /demo/{id}:
     get:
       consumes:

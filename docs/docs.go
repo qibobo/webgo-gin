@@ -42,7 +42,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "demo"
+                    "demossss"
                 ],
                 "summary": "create demo",
                 "responses": {
